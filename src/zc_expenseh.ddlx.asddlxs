@@ -1,0 +1,90 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Expense Voucher',
+  typeNamePlural: 'Expense Vouchers',
+  title: { type: #STANDARD, value: 'ExpId' },
+  description: { type: #STANDARD, value: 'StoreId' }
+}
+@UI.presentationVariant: [{
+  sortOrder: [{ by: 'CreatedOn', direction: #DESC }],
+  visualizations: [{ type: #AS_LINEITEM }]
+}]
+annotate entity ZC_ExpenseH with
+{
+  @UI.facet: [
+    { id: 'HeaderInfo',  type: #COLLECTION, label: 'Expense Details', position: 10 },
+    { id: 'GeneralInfo', parentId: 'HeaderInfo', type: #FIELDGROUP_REFERENCE, targetQualifier: 'GeneralGroup', label: 'General Information', position: 10 },
+    { id: 'StoreInfo',   parentId: 'HeaderInfo', type: #FIELDGROUP_REFERENCE, targetQualifier: 'StoreGroup', label: 'Store Information', position: 20 },
+    { id: 'AmountInfo',  parentId: 'HeaderInfo', type: #FIELDGROUP_REFERENCE, targetQualifier: 'AmountGroup', label: 'Financials & GST', position: 30 },
+    { id: 'ItemsInfo',   type: #LINEITEM_REFERENCE, targetElement: '_Items', label: 'Bill Line Items', position: 40 }
+  ]
+
+  @UI: { lineItem: [{ position: 10, label: 'Voucher No' }], 
+         selectionField: [{ position: 10 }],
+         fieldGroup: [{ qualifier: 'GeneralGroup', position: 10, label: 'Voucher ID' }] }
+  ExpId;
+
+  @UI: { lineItem: [{ position: 20, label: 'Store' }], 
+         selectionField: [{ position: 20 }],
+         fieldGroup: [{ qualifier: 'StoreGroup', position: 10, label: 'Store ID' }] }
+  StoreId;
+
+  @UI: { lineItem: [{ position: 30, label: 'City' }], 
+         fieldGroup: [{ qualifier: 'StoreGroup', position: 20, label: 'City' }] }
+  City;
+
+  @UI: { lineItem: [{ position: 40, label: 'Region' }], 
+         fieldGroup: [{ qualifier: 'StoreGroup', position: 30, label: 'Region' }] }
+  Region;
+
+  @UI.fieldGroup: [{ qualifier: 'StoreGroup', position: 40, label: 'Cost Center' }]
+  CostCenter;
+
+  @UI: { lineItem: [{ position: 50, label: 'Vendor' }], 
+         selectionField: [{ position: 30 }],
+         fieldGroup: [{ qualifier: 'GeneralGroup', position: 20, label: 'Vendor' }] }
+  VendorId;
+
+  @UI: { lineItem: [{ position: 60, label: 'Category' }], 
+         selectionField: [{ position: 40 }],
+         fieldGroup: [{ qualifier: 'GeneralGroup', position: 30, label: 'Category' }] }
+  ExpCat;
+
+  @UI: { lineItem: [{ position: 70, label: 'Pay Mode' }], 
+         fieldGroup: [{ qualifier: 'GeneralGroup', position: 40, label: 'Payment Mode' }] }
+  PayMode;
+
+  @UI: { lineItem: [{ position: 80, label: 'GST %' }], 
+         fieldGroup: [{ qualifier: 'AmountGroup', position: 10, label: 'GST Slab' }] }
+  GstSlab;
+
+  @UI: { lineItem: [{ position: 90, label: 'Total' }], 
+         fieldGroup: [{ qualifier: 'AmountGroup', position: 20, label: 'Total Amount' }] }
+  TotalAmt;
+
+  @UI.fieldGroup: [{ qualifier: 'AmountGroup', position: 30, label: 'Base Amount' }]
+  BaseAmt;
+
+  @UI.fieldGroup: [{ qualifier: 'AmountGroup', position: 40, label: 'CGST' }]
+  CgstAmt;
+
+  @UI.fieldGroup: [{ qualifier: 'AmountGroup', position: 50, label: 'SGST' }]
+  SgstAmt;
+
+  @UI.fieldGroup: [{ qualifier: 'AmountGroup', position: 60, label: 'Currency' }]
+  Currency;
+
+  @UI: { lineItem: [{ position: 130, label: 'Status' }], 
+         selectionField: [{ position: 50 }],
+         fieldGroup: [{ qualifier: 'GeneralGroup', position: 50, label: 'Status' }] }
+  Status;
+
+  @UI.fieldGroup: [{ qualifier: 'GeneralGroup', position: 60, label: 'Created By' }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'GeneralGroup', position: 70, label: 'Created On' }]
+  CreatedOn;
+  
+  @UI.hidden: true
+  ExpUuid;
+}

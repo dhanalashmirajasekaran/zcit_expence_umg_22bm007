@@ -1,0 +1,10 @@
+@EndUserText.label: 'Zudio Expense Management Service'
+define service ZEXP_SD {
+  expose ZC_ExpenseH  as ExpenseHeader;
+  expose ZC_ExpenseI  as ExpenseItem;
+  expose ZI_StoreVH   as StoreVH;
+  expose ZI_VendorVH  as VendorVH;
+  expose ZI_ExpCatVH  as ExpCatVH;
+  expose ZI_GSTSlabVH as GSTSlabVH;
+  expose ZI_PayModeVH as PayModeVH;
+}

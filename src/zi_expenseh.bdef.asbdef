@@ -1,0 +1,103 @@
+unmanaged implementation in class zbp_i_expenseh unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_ExpenseH alias ExpenseHeader
+
+draft table zexp_h_d
+lock master total etag LocalLastChangedAt
+authorization master ( global )
+{
+  create;
+  update;
+  delete;
+
+  association _Items { create; with draft; }
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateTotalAmount;
+    validation validateVendor;
+    validation validateBudget;
+    validation validateDuplicate;
+  }
+
+  determination determineCreatedBy    on modify { create; }
+  determination determineExpId        on modify { create; }
+  determination determineStoreDetails on modify { field StoreId; }
+  determination determineGSTAmounts   on modify { field TotalAmt, GstSlab; }
+
+  validation validateTotalAmount on save { create; update; }
+  validation validateVendor      on save { create; update; }
+  validation validateBudget      on save { create; update; }
+  validation validateDuplicate   on save { create; }
+
+  field ( readonly ) ExpUuid, CreatedBy, CreatedOn,
+                     City, Region, CostCenter,
+                     BaseAmt, CgstAmt, SgstAmt,
+                     LocalLastChangedAt;
+
+  field ( numbering : managed ) ExpUuid;
+
+  mapping for zexp_h
+  {
+    ExpUuid            = exp_uuid;
+    ExpId              = exp_id;
+    StoreId            = store_id;
+    City               = city;
+    Region             = region;
+    CostCenter         = cost_center;
+    VendorId           = vendor_id;
+    ExpCat             = exp_cat;
+    PayMode            = pay_mode;
+    GstSlab            = gst_slab;
+    TotalAmt           = total_amt;
+    BaseAmt            = base_amt;
+    CgstAmt            = cgst_amt;
+    SgstAmt            = sgst_amt;
+    Currency           = currency;
+    Status             = status;
+    CreatedBy          = created_by;
+    CreatedOn          = created_on;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_ExpenseI alias ExpenseItem
+draft table zexp_i_d
+lock dependent by _Header
+authorization dependent by _Header
+{
+  update;
+  delete;
+
+  association _Header { with draft; }
+
+  determination determineItemAmounts on modify { field Quantity, UnitPrice; }
+
+  field ( readonly ) ExpUuid, ItemUuid, LocalLastChangedAt;
+  field ( numbering : managed ) ItemUuid;
+
+  mapping for zexp_i
+  {
+    ExpUuid            = exp_uuid;
+    ItemUuid           = item_uuid;
+    ItemNo             = item_no;
+    ItemDesc           = item_desc;
+    Quantity           = quantity;
+    Unit               = unit;
+    UnitPrice          = unit_price;
+    ItemAmt            = item_amt;
+    ItemGstAmt         = item_gst_amt;
+    ItemTotalAmt       = item_total_amt;
+    Currency           = currency;
+    ReceiptFilename    = receipt_filename;
+    ReceiptMimetype    = receipt_mimetype;
+    ReceiptContent     = receipt_content;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
